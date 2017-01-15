@@ -1,0 +1,24 @@
+version: '2'
+services:
+  database:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: aiteru
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - ./db/:/docker-entrypoint-initdb.d
+  backend:
+    image: aiteru-ios-server
+    environment:
+      APP_PORT: 8000
+      APP_MYSQL_HOST: database
+      APP_MYSQL_PORT: 3306
+      APP_MYSQL_PROTOCOL: tcp
+      APP_MYSQL_USER: root
+      APP_MYSQL_PASSWORD: ''
+      APP_MYSQL_DB: aiteru
+    ports:
+      - "8081:8000"
+    links:
+      - database
+
