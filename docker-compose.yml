@@ -1,13 +1,24 @@
 version: '2'
+
 services:
+
   database:
-    image: mysql
+    build: "./images/database"
     environment:
       MYSQL_DATABASE: aiteru
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - ./db/:/docker-entrypoint-initdb.d
+
+  frontend:
+    build: "./images/frontend"
+    image: aiteru-frontend
+    command: "npm run build:all:production"
+    volumes:
+      - ./dist:/work/aiteru-webapp/dist:rw
+
   backend:
+    build: "./images/backend"
     image: aiteru-server
     environment:
       APP_PORT: 8000
@@ -22,3 +33,12 @@ services:
     links:
       - database
 
+  webserver:
+    build: "./images/webserver"
+    image: aiteru-web-server
+    ports:
+      - "2000:2000"
+    volumes:
+      - ./dist:/var/www/html
+    links:
+      - backend
