@@ -1,4 +1,4 @@
-docker-compose.yml andFROM node:7.4
+FROM node:7.4
 
 RUN apt-get update -y && apt-get upgrade -y
 
