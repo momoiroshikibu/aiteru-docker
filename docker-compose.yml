@@ -7,8 +7,11 @@ services:
     environment:
       MYSQL_DATABASE: aiteru
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes_from:
+      - storage:rw
     volumes:
       - ./db/:/docker-entrypoint-initdb.d
+#      - ./mysql:/var/lib/mysql:rw
 
   frontend:
     build: "./images/frontend"
@@ -29,7 +32,7 @@ services:
       APP_MYSQL_PASSWORD: ''
       APP_MYSQL_DB: aiteru
     ports:
-      - "8081:8000"
+      - "8000:8000"
     links:
       - database
 
@@ -37,8 +40,17 @@ services:
     build: "./images/webserver"
     image: aiteru-web-server
     ports:
-      - "2000:2000"
+#       - "2000:2000"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./dist:/var/www/html
+#       - /etc/letsencrypt/live/whats-open-now.com/privkey.pem:/etc/letsencrypt/live/whats-open-now.com/privkey.pem
+#       - /etc/letsencrypt/live/whats-open-now.com/fullchain.pem:/etc/letsencrypt/live/whats-open-now.com/fullchain.pem
     links:
       - backend
+
+  storage:
+    build: "./images/storage"
+    volumes:
+      - ./opt:/opt:rw
