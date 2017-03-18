@@ -1,6 +1,11 @@
-FROM golang:1.6
+FROM golang:1.7
 
-RUN go get github.com/mochi8k/aiteru-server
+RUN apt-get update && apt-get install -y redis-server
 
-CMD ["go", "run", "/go/src/github.com/mochi8k/aiteru-server/server.go"]
+RUN go get -u -t github.com/mochi8k/aiteru-server
 
+ADD wait-for-it.sh /go/src/github.com/mochi8k/aiteru-server
+
+WORKDIR /go/src/github.com/mochi8k/aiteru-server
+
+CMD ["sh", "wait-for-it.sh", "go", "run", "server.go"]
