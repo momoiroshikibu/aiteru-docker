@@ -1,6 +1,6 @@
 #!/bin/bash
 
-host=redis
+host=cachestorage
 port=6379
 cmd=$@
 
