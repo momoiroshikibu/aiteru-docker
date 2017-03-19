@@ -31,10 +31,15 @@ services:
       APP_MYSQL_USER: root
       APP_MYSQL_PASSWORD: ''
       APP_MYSQL_DB: aiteru
+      APP_REDIS_HOST: cachestorage
+      APP_REDIS_PORT: 6379
+      APP_REDIS_PASSWORD: ''
+      APP_REDIS_DB: 0
     ports:
       - "8000:8000"
     links:
       - database
+      - cachestorage
 
   webserver:
     build: "./images/webserver"
@@ -54,3 +59,9 @@ services:
     build: "./images/storage"
     volumes:
       - ./opt:/opt:rw
+
+  cachestorage:
+    build: "./images/cachestorage"
+    image: aiteru-cache-storage
+    ports:
+      - "6379:6379"
